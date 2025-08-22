@@ -1,0 +1,948 @@
+@charset "UTF-8";
+
+/* 기본 레이아웃 */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* 헤더 */
+header {
+  background-color: #1f1f1f;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* 히어로 영역 */
+.hero {
+  background: url('https://images.unsplash.com/photo-1577563908411-5077c5649e56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+  position: relative;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: auto;
+}
+
+.hero h1 {
+  font-size: 2.8em;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+/* 공통 버튼 */
+.cta-button {
+  padding: 12px 30px;
+  font-size: 1.1em;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: center;
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
+}
+
+/* 서비스 소개 */
+.info-section {
+  background-color: #fff;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.info-section h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 기능 소개 */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #f9f9f9;
+  padding: 60px 20px;
+}
+
+.feature-box {
+  flex: 1 1 250px;
+  margin: 20px;
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.feature-box h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.feature-box p {
+  color: #555;
+  line-height: 1.5;
+}
+/* 📌 공통 폼 스타일 (로그인, 회원가입용) */
+form {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+  color: #333;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"] {
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fafafa;
+}
+
+form input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+form .cta-button {
+  margin-top: 15px;
+  padding: 12px 0;
+  width: 100%;
+}
+
+form p {
+  font-size: 0.95em;
+  margin-top: 10px;
+}
+
+form p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+form p a:hover {
+  text-decoration: underline;
+}
+/* 마이페이지 내비게이션 버튼 */
+.mypage-nav {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mypage-nav button {
+  padding: 12px 25px;
+  font-size: 1em;
+  border: none;
+  border-radius: 6px;
+  background-color: #2c3e50; /* 미드나잇 블루 */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mypage-nav button:hover {
+  background-color: #2980b9; /* 딥 스카이 블루 */
+}
+
+/* 회원 탈퇴 버튼 색상 다르게 */
+.mypage-nav button:nth-child(3) {
+  background-color: #e74c3c; /* 선명한 레드 */
+}
+
+.mypage-nav button:nth-child(3):hover {
+  background-color: #c0392b; /* 진한 레드 */
+}
+
+/* 섹션 기본 스타일 */
+.mypage-section {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(44, 62, 80, 0.1);
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+/* 예약 내역 테이블 */
+.reservation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1em;
+  color: #2c3e50;
+}
+
+.reservation-table th,
+.reservation-table td {
+  padding: 12px 15px;
+  border: 1px solid #ecf0f1;
+  text-align: center;
+}
+
+.reservation-table thead {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.reservation-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 회원정보 수정 폼 */
+.mypage-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.mypage-section label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #34495e;
+}
+
+.mypage-section input[type="text"],
+.mypage-section input[type="email"],
+.mypage-section input[type="tel"] {
+  padding: 10px 15px;
+  font-size: 1em;
+  border: 2px solid #bdc3c7;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fff;
+  color: #2c3e50;
+}
+
+.mypage-section input[type="text"]:focus,
+.mypage-section input[type="email"]:focus,
+.mypage-section input[type="tel"]:focus {
+  outline: none;
+  border-color: #2980b9;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.5);
+}
+
+/* 폼 수정하기 버튼 */
+.mypage-section .cta-button {
+  width: 150px;
+  align-self: center;
+  padding: 12px 25px;
+  font-size: 1em;
+  border-radius: 6px;
+  background-color: #2c3e50;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.mypage-section .cta-button:hover {
+  background-color: #2980b9;
+}
+
+/* 회원 탈퇴 버튼 */
+.mypage-section button[style*="background-color:#e74c3c"] {
+  width: 180px;
+  margin: 0 auto;
+  display: block;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+}
+
+.mypage-section button[style*="background-color:#e74c3c"]:hover {
+  background-color: #c0392b !important;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .mypage-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mypage-section {
+    padding: 20px;
+  }
+}
+
+/* 예약 폼 */
+main.container form {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main.container form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* 날짜/시간 입력 */
+main.container form input[type="date"],
+main.container form input[type="time"] {
+  padding: 10px 15px;
+  font-size: 1em;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  width: 100%;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+main.container form input[type="date"]:focus,
+main.container form input[type="time"]:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0,123,255,0.5);
+}
+
+/* 좌석 선택 */
+.seat-map {
+  margin-top: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 좌석 라디오 숨기고 라벨로 꾸미기 */
+input[type="radio"] {
+  display: none;
+}
+
+label.seat {
+  display: inline-block;
+  background: #eee;
+  border: 2px solid #ccc;
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin: 5px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+/* 마우스 호버 시 */
+label.seat:hover {
+  background-color: #d3e5ff;
+  border-color: #007bff;
+}
+
+/* 선택된 좌석 효과 */
+input[type="radio"]:checked + label.seat {
+  background-color: #007bff;
+  border-color: #0056b3;
+  color: white;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+}
+/* 공지사항 목록 테이블 스타일 */
+.notice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.notice-table th,
+.notice-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ecf0f1;
+}
+
+.notice-table th {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.notice-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.notice-table tbody tr a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.notice-table tbody tr a:hover {
+  text-decoration: underline;
+}
+
+/* 검색바 컨테이너 */
+.search-bar {
+  display: flex;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  margin-bottom: 20px;
+  width: 100%;
+  gap: 10px; /* 입력창과 버튼 사이의 간격 */
+}
+
+/* 검색바 컨테이너 */
+.search-bar {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* 검색창 스타일 */
+.search-bar input {
+  padding: 8px 12px;
+  border: 2px solid #ccc;
+  border-radius: 4px 0 0 4px; /* 왼쪽 모서리 둥글게 */
+  font-size: 1em;
+  width: 200px;  /* 너비 고정 */
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* 검색 버튼 스타일 */
+.search-bar button {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;  /* 오른쪽 모서리 둥글게 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1em;
+}
+
+.search-bar button:hover {
+  background-color: #2980b9;
+}
+
+
+/* 공지사항 테이블 스타일 */
+.notice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.notice-table th,
+.notice-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ecf0f1;
+}
+
+.notice-table th {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.notice-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.notice-table tbody tr a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.notice-table tbody tr a:hover {
+  text-decoration: underline;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 15px;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #2980b9;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .notice-table th, .notice-table td {
+    font-size: 0.9em;
+  }
+
+  .search-bar input {
+    width: 100%;
+  }
+}
+/* 공지사항 상세 스타일 */
+.notice-info {
+  margin-bottom: 20px;
+}
+
+.notice-info p {
+  font-size: 1.1em;
+  color: #34495e;
+}
+
+.notice-content {
+  margin-top: 20px;
+  line-height: 1.6;
+  font-size: 1.1em;
+  color: #2c3e50;
+}
+
+/* 기존의 공통 버튼 */
+.cta-button {
+  padding: 12px 30px;
+  font-size: 1.1em;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: center;
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
+}
+
+/* 공지사항 검색 버튼에만 적용할 새로운 클래스 */
+.search-btn {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0; /* 오른쪽 모서리 둥글게 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1em;
+}
+
+.search-btn:hover {
+  background-color: #2980b9;
+}
+/* 게시판 기본 스타일 */
+table.notice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.notice-table th,
+.notice-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ecf0f1;
+}
+
+.notice-table th {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.notice-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.notice-table tbody tr a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.notice-table tbody tr a:hover {
+  text-decoration: underline;
+}
+
+/* 게시판 목록 스타일 */
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.board-table th,
+.board-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ecf0f1;
+}
+
+.board-table th {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.board-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.board-table tbody tr a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.board-table tbody tr a:hover {
+  text-decoration: underline;
+}
+
+/* 게시판 글쓰기 폼 */
+.board-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.board-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+  color: #333;
+}
+
+.board-form input[type="text"],
+.board-form textarea {
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fafafa;
+}
+
+.board-form input:focus,
+.board-form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.board-form textarea {
+  height: 200px;
+}
+
+.board-form .cta-button {
+  margin-top: 15px;
+  padding: 12px 0;
+  width: 100%;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.board-form .cta-button:hover {
+  background-color: #2980b9;
+}
+/* 게시판 상세보기 */
+.board-detail {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.board-detail h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.board-detail .info {
+  font-size: 1em;
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+.board-detail .info span {
+  margin-right: 20px;
+}
+
+.board-detail .content {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #34495e;
+  margin-bottom: 30px;
+}
+/* 수정, 삭제 버튼 스타일 */
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.action-buttons button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* 수정 버튼 스타일 */
+.edit-button {
+  background-color: #f39c12; /* 오렌지 색 */
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #e67e22; /* 진한 오렌지 */
+}
+
+/* 삭제 버튼 스타일 */
+.delete-button {
+  background-color: #e74c3c; /* 빨간 색 */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c0392b; /* 진한 빨간색 */
+}
+
+/* 댓글 영역 */
+.comments-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 30px;
+}
+
+.comments-section h3 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.comment {
+  border-bottom: 1px solid #ecf0f1;
+  padding: 15px 0;
+  margin-bottom: 15px;
+}
+
+.comment .author {
+  font-weight: bold;
+  color: #2980b9;
+}
+
+.comment .date {
+  font-size: 0.9em;
+  color: #7f8c8d;
+  margin-bottom: 10px;
+}
+
+.comment .text {
+  font-size: 1em;
+  color: #34495e;
+}
+
+/* 댓글 작성 폼 */
+.comment-form {
+  margin-top: 30px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #fafafa;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.comment-form .cta-button {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-form .cta-button:hover {
+  background-color: #2980b9;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .board-detail {
+    padding: 20px;
+  }
+
+  .board-detail h2 {
+    font-size: 1.8em;
+  }
+
+  .board-detail .content {
+    font-size: 1em;
+  }
+}
+
+
+/* 푸터 */
+footer {
+  background-color: #1f1f1f;
+  color: #ccc;
+  padding: 40px 20px 20px;
+  font-size: 0.95em;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.footer-container > div {
+  flex: 1 1 250px;
+  margin: 10px 20px;
+}
+
+.footer-container h3,
+.footer-container h4 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.footer-links ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-contact p {
+  line-height: 1.6;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+  margin-top: 20px;
+  font-size: 0.85em;
+  color: #888;
+}
