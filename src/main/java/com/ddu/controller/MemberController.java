@@ -15,11 +15,13 @@ import java.util.List;
 import com.ddu.dao.BoardDao;
 import com.ddu.dao.MemberDao;
 import com.ddu.dao.ReservationDao;
+import com.ddu.dto.BoardDto;
 import com.ddu.dto.MemberDto;
 
 @WebServlet("*.do")
 public class MemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final int PAGE_GROUP_SIZE = 5;
        
     public MemberController() {
         super();
@@ -41,14 +43,14 @@ public class MemberController extends HttpServlet {
 		System.out.println("CONPATH : " + conPath );
 		
 		String comm =(uri.substring(conPath.length())); // 최종 요청 값
+		HttpSession session =null;
 		String viewPage = "";
 		
 		MemberDao mdao = new MemberDao();
 		BoardDao bDao = new BoardDao();
 		ReservationDao rDao = new ReservationDao();
+		List<BoardDto> bDtos = new ArrayList<BoardDto>();
 		
-		List< MemberDto> mDtos = new ArrayList<MemberDto>();
-		HttpSession session = null;
 		if(comm.equals("/signup.do")) {
 			viewPage="signup.jsp";
 		}
@@ -64,20 +66,336 @@ public class MemberController extends HttpServlet {
 			mDto.setMember_name(mname);
 			mDto.setMember_email(memail);
 			
-			System.out.println(mid);
-			if (mdao.confirmId(mid) == 1) {
-				request.setAttribute("error", "이미 사용 중인 아이디입니다.");
-				viewPage="signup.jsp";
-				return;
-			} else {
-				mdao.joinMember(mDto);
-				request.setAttribute("mDto", mDto);
-				request.setAttribute("success", "회원가입 성공! 로그인 해주세요");
-				viewPage ="login.jsp";
+//			System.out.println(mid);
+			int idCheck = mdao.confirmId(mDto.getMember_id());
+			System.out.println(idCheck);
+			
+			if (idCheck == MemberDao.MEMBER_ID_EXISTENT) {
+				request.setAttribute("msg", "1");
+				viewPage ="signup.jsp";
+			}else {
+				int joinResult = mdao.joinMember(mDto);
+				if (joinResult == MemberDao.MEMBER_JOIN_SUCCESS) {
+					request.setAttribute("msg", "2");
+					request.setAttribute("mDto", mDto);
+					viewPage = "login.jsp";
+				} else {
+					request.setAttribute("msg", "3");
+				}
 			}
+		} else if(comm.equals("/login.do")) {
+			viewPage = "login.jsp";
+		} else if(comm.equals("/loginOk.do")) {
+			request.setCharacterEncoding("utf-8");
+			String login_id = request.getParameter("user_id");
+			String login_pw = request.getParameter("user_pw");
 			
+			int loginFlag = mdao.loginCheck(login_id, login_pw); 
+			//로그인 성공이면 1, 실패면 0이 반환
+			if(loginFlag == 1) {
+				session = request.getSession();
+				session.setAttribute("user_id", login_id);
+			} else {
+				response.sendRedirect("login.do?msg=1");
+				return;
+			}
+			viewPage = "index.do";
+		} else if (comm.equals("/logout.do")) { 
+			session =request.getSession();
+			session.invalidate();
+			viewPage = "index.jsp";
+		} else if (comm.equals("/mypage.do")) { // 글 내용 확인 요청
+			request.setCharacterEncoding("utf-8");
+			session = request.getSession();
+			String user_id = null;
+			if (session == null ) {
+				response.sendRedirect("login.jsp?msg=4");
+				return;
+			}
+			user_id = (String) session.getAttribute("user_id");
+			if (user_id == null) {
+				response.sendRedirect("login.jsp?msg=4");
+				return;
+			}
+			MemberDto mDto = mdao.memberInfo(user_id);
+			request.setAttribute("mDto", mDto);
+			viewPage = "mypage.jsp";
+			System.out.println(user_id);
+		} else if (comm.equals("/modifymember.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
 			
+			MemberDto mDto = new MemberDto();
+			
+			String user_id = request.getParameter("user_id");
+			String user_pw = request.getParameter("user_pw");
+			String user_name = request.getParameter("user_name");
+			String user_email = request.getParameter("user_email");
+			
+			mdao.memberModify(user_pw, user_name, user_email, user_id);
+			
+			mDto = mdao.memberInfo(user_id);
+			request.setAttribute("mDto", mDto);
+			
+			response.sendRedirect("mypage.do");
+			return;
+		} else if (comm.equals("/deletemember.do")) { // 글 삭제 확인
+			session = request.getSession();
+			if (session == null || session.getAttribute("user_id") == null) {
+		        response.sendRedirect("login.jsp?msg=4");
+		        return;
+		    }
+			String user_id =(String)session.getAttribute("user_id");
+			mdao.memberDelete(user_id);
+			System.out.println(user_id);
+			session.invalidate();
+			response.sendRedirect("index.do");
+			return;
+		} else if (comm.equals("/boardlist.do")) { // 게시판 모든 글 목록 보기 요청
+			request.setCharacterEncoding("utf-8"); 
+			String searchType = request.getParameter("searchType");
+			String searchKeyword = request.getParameter("searchKeyword");
+			String category = request.getParameter("category");
+			int page = 1;
+			int totalBoardCount = 0; // 모든 글의 갯수
+			
+			if (category == null || category.isEmpty()) {
+			    category = "general"; // 기본 카테고리 설정
+			}
+			if (request.getParameter("page") == null) { // 참이면 링크타고 게시판으로 들어온 경우
+				page = 1;
+			} else { // 유저가 보고 싶은 페이지 번호를 누른 경우
+				page = Integer.parseInt(request.getParameter("page"));
+				// 유저가 클릭한 보고싶은 페이지 번호
+			}
+			if (searchType != null && searchKeyword != null && !searchKeyword.strip().isEmpty()) { // 유저가 검색 결과 리스트를 원하는 경우
+				bDtos = bDao.contentSearch(searchKeyword, searchType, 1);
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.contentSearch(searchKeyword, searchType, page);
+				request.setAttribute("searchType", searchType);
+				request.setAttribute("searchKeyword", searchKeyword);
+			} else { // 전체 글 리스트를 원하는 경우
+				bDtos = bDao.boardList(1,category);
+				System.out.println("boardList 결과 개수: " + bDtos.size());
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.boardList(page,category);
+			}
+						int totalPage = (int)Math.ceil((double)totalBoardCount / BoardDao.PAGE_SIZE);
+			// 모든 글의 갯수 구해서 소수점을 올려주는 방정식 
+			int startPage = (((page -1) /PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE) + 1 ; 
+			int endPage = Math.min(startPage + (PAGE_GROUP_SIZE -1), totalPage) ;
+			// 마지막 페이지 그룹의 경우에는 실제 마지막 페이지로 표시 (그룹의 마지막 페이지, 총 페이지) 중 작은 수를 구함
+			//int endPage = (startPage + (PAGE_GROUP_SIZE -1)) ;
+			
+			request.setAttribute("bDtos", bDtos);
+			request.setAttribute("totalPage",totalPage); // 전체 글 갯수로 계산한 전체 페이지 수
+			request.setAttribute("currentPage", page); // 현재 페이지 넘버
+			request.setAttribute("startPage",startPage); // 그룹으로 나눈 페이지의 시작
+			request.setAttribute("endPage",endPage); // 그룹으로 나눈 페이지의 끝
+			request.setAttribute("totalBoardCount", totalBoardCount);
+			viewPage = "boardlist.jsp";
+		} else if (comm.equals("/notice.do")) { // 게시판 모든 글 목록 보기 요청
+			request.setCharacterEncoding("utf-8"); 
+			String searchType = request.getParameter("searchType");
+			String searchKeyword = request.getParameter("searchKeyword");
+			String category = request.getParameter("category");
+			int page = 1;
+			int totalBoardCount = 0; // 모든 글의 갯수
+			
+			if (category == null || category.isEmpty()) {
+			    category = "general"; // 기본 카테고리 설정
+			}
+			if (request.getParameter("page") == null) { // 참이면 링크타고 게시판으로 들어온 경우
+				page = 1;
+			} else { // 유저가 보고 싶은 페이지 번호를 누른 경우
+				page = Integer.parseInt(request.getParameter("page"));
+				// 유저가 클릭한 보고싶은 페이지 번호
+			}
+			if (searchType != null && searchKeyword != null && !searchKeyword.strip().isEmpty()) { // 유저가 검색 결과 리스트를 원하는 경우
+				bDtos = bDao.contentSearch(searchKeyword, searchType, 1);
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.contentSearch(searchKeyword, searchType, page);
+				request.setAttribute("searchType", searchType);
+				request.setAttribute("searchKeyword", searchKeyword);
+			} else { // 전체 글 리스트를 원하는 경우
+				bDtos = bDao.boardList(1,category);
+				System.out.println("boardList 결과 개수: " + bDtos.size());
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.boardList(page,category);
+			}
+						int totalPage = (int)Math.ceil((double)totalBoardCount / BoardDao.PAGE_SIZE);
+			// 모든 글의 갯수 구해서 소수점을 올려주는 방정식 
+			int startPage = (((page -1) /PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE) + 1 ; 
+			int endPage = Math.min(startPage + (PAGE_GROUP_SIZE -1), totalPage) ;
+			// 마지막 페이지 그룹의 경우에는 실제 마지막 페이지로 표시 (그룹의 마지막 페이지, 총 페이지) 중 작은 수를 구함
+			//int endPage = (startPage + (PAGE_GROUP_SIZE -1)) ;
+			
+			request.setAttribute("bDtos", bDtos);
+			request.setAttribute("totalPage",totalPage); // 전체 글 갯수로 계산한 전체 페이지 수
+			request.setAttribute("currentPage", page); // 현재 페이지 넘버
+			request.setAttribute("startPage",startPage); // 그룹으로 나눈 페이지의 시작
+			request.setAttribute("endPage",endPage); // 그룹으로 나눈 페이지의 끝
+			request.setAttribute("totalBoardCount", totalBoardCount);
+			viewPage = "notice.jsp";
 		}
+		else if (comm.equals("/contentview.do")) { // 글 내용 확인 요청
+			request.setCharacterEncoding("utf-8");
+			int bnum = Integer.parseInt(request.getParameter("bnum")); // 유저가 선택한 글의 번호
+			bDao.updateBhit(bnum); // 조회수 증가
+			
+			BoardDto bDto = bDao.contentView(bnum);	
+			if (bDto == null) { // 해당글이 존재 하지 않을때
+					 request.setAttribute("deleteMsg", "해당글은 존재하지 않는 글 입니다.");
+				// response.sendRedirect("boardList.do?msg=1"); // -> 2번째 방법 
+					// return;
+				} else {
+					request.setAttribute("bDto", bDto);
+				}
+				
+				System.out.println(bnum);
+			
+			viewPage = "contentview.jsp";
+		
+		} else if (comm.equals("/contentmodify.do")) {
+			request.setCharacterEncoding("utf-8");
+			String bnum = request.getParameter("bnum");
+			BoardDto bDto = bDao.contentView(Integer.parseInt(bnum));
+			
+			request.setAttribute("bDto", bDto);
+			viewPage = "contentmodify.jsp";
+		} 
+		else if (comm.equals("/contentmodifyOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
+			
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			String member_name = request.getParameter("member_name");
+			String btitle = request.getParameter("btitle");
+			String bcontent = request.getParameter("bcontent");
+			
+			BoardDto bDto = new BoardDto();
+			bDao.contentModify(btitle, bcontent, bnum);
+			
+			bDto = bDao.contentView(bnum);
+			request.setAttribute("bDto",bDto );
+			
+			viewPage="contentview.do";
+		}  else if (comm.equals("/delete.do")) { // 글 삭제 확인
+			String bnum = request.getParameter("bnum");
+			bDao.contentDelete(Integer.parseInt(bnum));
+			
+			response.sendRedirect("boardlist.do");
+			return;
+		}  else if (comm.equals("/write.do")) {
+			String category = request.getParameter("category");
+			request.setAttribute("category", category);
+			viewPage="write.jsp";
+		} 
+		else if (comm.equals("/writeOk.do")) {
+			String btitle =request.getParameter("btitle");
+			String bcontent =request.getParameter("bcontent");
+			String category = "general";
+			session= request.getSession();
+			String member_id = (String)session.getAttribute("user_id");
+			
+			if (member_id.equals("admin")) {
+				category="notice";
+				
+			} 
+			BoardDto bDto = new BoardDto();
+			
+			bDto.setBtitle(btitle);
+			bDto.setBcontent(bcontent);
+			bDto.setMember_id(member_id);
+			bDto.setCategory(category);
+			
+			bDao.boardWrite(btitle, bcontent, member_id, category);
+			
+			if (category.equals("notice")) {
+			    response.sendRedirect("notice.do?category=notice");
+			    return;
+			}
+			response.sendRedirect("boardlist.do");
+			return;
+
+		}
+		else if (comm.equals("/notice.do")) {
+			request.setCharacterEncoding("utf-8"); 
+			String searchType = request.getParameter("searchType");
+			String searchKeyword = request.getParameter("searchKeyword");
+			String category = request.getParameter("category");
+			int page = 1;
+			int totalBoardCount = 0; // 모든 글의 갯수
+			
+			if (category == null || category.isEmpty()) {
+			    category = "notice"; // 기본 카테고리 설정
+			}
+			if (request.getParameter("page") == null) { // 참이면 링크타고 게시판으로 들어온 경우
+				page = 1;
+			} else { // 유저가 보고 싶은 페이지 번호를 누른 경우
+				page = Integer.parseInt(request.getParameter("page"));
+				// 유저가 클릭한 보고싶은 페이지 번호
+			}
+			if (searchType != null && searchKeyword != null && !searchKeyword.strip().isEmpty()) { // 유저가 검색 결과 리스트를 원하는 경우
+				bDtos = bDao.contentSearch(searchKeyword, searchType, 1);
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.contentSearch(searchKeyword, searchType, page);
+				request.setAttribute("searchType", searchType);
+				request.setAttribute("searchKeyword", searchKeyword);
+			} else { // 전체 글 리스트를 원하는 경우
+				bDtos = bDao.boardList(1,category);
+				System.out.println("boardList 결과 개수: " + bDtos.size());
+				if (!bDtos.isEmpty()) {
+					totalBoardCount = bDtos.get(0).getBno();
+				}
+				bDtos = bDao.boardList(page,category);
+			}
+						int totalPage = (int)Math.ceil((double)totalBoardCount / BoardDao.PAGE_SIZE);
+			// 모든 글의 갯수 구해서 소수점을 올려주는 방정식 
+			int startPage = (((page -1) /PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE) + 1 ; 
+			int endPage = Math.min(startPage + (PAGE_GROUP_SIZE -1), totalPage) ;
+			// 마지막 페이지 그룹의 경우에는 실제 마지막 페이지로 표시 (그룹의 마지막 페이지, 총 페이지) 중 작은 수를 구함
+			//int endPage = (startPage + (PAGE_GROUP_SIZE -1)) ;
+			
+			request.setAttribute("bDtos", bDtos);
+			request.setAttribute("totalPage",totalPage); // 전체 글 갯수로 계산한 전체 페이지 수
+			request.setAttribute("currentPage", page); // 현재 페이지 넘버
+			request.setAttribute("startPage",startPage); // 그룹으로 나눈 페이지의 시작
+			request.setAttribute("endPage",endPage); // 그룹으로 나눈 페이지의 끝
+			request.setAttribute("totalBoardCount", totalBoardCount);
+			request.setAttribute("category", category);  // ← 이거 꼭 필요!
+
+			viewPage ="notice.jsp";
+		} else if (comm.equals("/noticeview.do")) { // 글 내용 확인 요청
+			request.setCharacterEncoding("utf-8");
+			int bnum = Integer.parseInt(request.getParameter("bnum")); // 유저가 선택한 글의 번호
+			bDao.updateBhit(bnum); // 조회수 증가
+			
+			BoardDto bDto = bDao.contentView(bnum);	
+			if (bDto == null) { // 해당글이 존재 하지 않을때
+					 request.setAttribute("deleteMsg", "해당글은 존재하지 않는 글 입니다.");
+				// response.sendRedirect("boardList.do?msg=1"); // -> 2번째 방법 
+					// return;
+				} else {
+					request.setAttribute("bDto", bDto);
+				}
+				
+				System.out.println(bnum);
+			
+			viewPage = "contentview.jsp";
+		
+		} 
+		else {
+			viewPage = "index.jsp";
+		} 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}

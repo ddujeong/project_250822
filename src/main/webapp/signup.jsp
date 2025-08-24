@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%
+ String msg = (String) request.getAttribute("msg");
+ if(msg != null){
+ 	if("1".equals(msg)) {
+	     out.println("<script>alert('이미 존재하는 아이디입니다.');window.history.go(-1);</script>");
+	 } else {
+ 	    out.println("<script>alert('회원가입 실패');window.history.go(-1);</script>");
+ 	}
+ }
+%>    
+    
 <!DOCTYPE html>
 <html lang="ko">
 <head>

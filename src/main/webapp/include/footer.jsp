@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%@ taglib prefix="c" uri="jakarta.tags.core" %>
     <link rel="stylesheet" href="css/style.css">
 <footer>
   <div class="footer-container">
@@ -12,10 +13,18 @@
       <h4>바로가기</h4>
       <ul>
         <li><a href="index.do">홈</a></li>
-        <li><a href="reserve.do">좌석 예약</a></li>
-        <li><a href="board.do">게시판</a></li>
-        <li><a href="login.do">로그인</a></li>
-        <li><a href="register.do">회원가입</a></li>
+        <li><a href="reservation.do">좌석 예약</a></li>
+        <li><a href="boardlist.do">게시판</a></li>
+        <c:choose>
+    	<c:when test="${not empty sessionScope.user_id }">
+    		<li><a href="mypage.do">마이페이지</a></li>
+    		<li><a href="logout.do">로그아웃</a></li>
+    	</c:when>
+    	<c:otherwise>
+    	    <li><a href="login.do">로그인</a></li>
+    	   	<li><a href="signup.do">회원가입</a></li>
+    	</c:otherwise>
+    </c:choose>
       </ul>
     </div>
 

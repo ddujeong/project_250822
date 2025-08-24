@@ -12,23 +12,28 @@
   <main class="container">
     <!-- 게시판 상세 내용 -->
     <div class="board-detail">
-      <h2>게시글 제목</h2>
+      <h2>${bDto.btitle }</h2>
       <div class="info">
-        <span>작성자: 홍길동</span>
-        <span>작성일: 2025-08-22</span>
-        <span>조회수: 150</span>
+        <span>작성자: ${bDto.memberDto.member_name }</span>
+        <span>작성일: ${bDto.bdate }</span>
+        <span>조회수: ${bDto.bhit }</span>
       </div>
 
       <!-- 게시글 본문 내용 -->
       <div class="content">
-        <p>안녕하세요! 이번 주 금요일에 예정된 특별 이벤트에 대한 안내입니다...</p>
-        <p>이벤트 시간과 장소는 아래와 같습니다. 많은 참여 부탁드립니다!</p>
+        <p>${bDto.bcontent }</p>
       </div>
 
       <!-- 수정, 삭제 버튼 -->
       <div class="action-buttons">
-        <button class="cta-button edit-button">수정</button>
-        <button class="cta-button delete-button">삭제</button>
+      <a href="boardlist.do">
+        <button class="cta-button" onclick="goBack()">목록으로 돌아가기</button></a>
+        <c:if test="${sessionScope.user_id == bDto.member_id || sessionScope.user_id == 'admin'}">
+       <a href="contentmodify.do?bnum=${bDto.bnum }">
+        <button class="cta-button edit-button">수정</button></a>
+       <a href="delete.do?bnum=${bDto.bnum }">
+        <button class="cta-button delete-button" onclick="alert('삭제하시겠습니까?')" >삭제</button></a>
+        </c:if>
       </div>
     </div>
 

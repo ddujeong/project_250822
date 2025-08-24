@@ -14,7 +14,7 @@
     <h2>🎮 좌석 예약</h2>
 
     <!-- 날짜 및 시간 선택 -->
-    <form id="reservation-form" action="reservationOk.jsp" method="GET">
+    <form id="reservation-form" action="reservationOk.jsp" method="GET" class="reserve-form">
   <label for="date">날짜 선택</label>
   <input type="date" id="date" name="date" required />
 

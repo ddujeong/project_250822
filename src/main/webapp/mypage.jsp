@@ -1,5 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+session = request.getSession();
+String user_id = null;
+if (session == null ) {
+	response.sendRedirect("login.jsp?msg=4");
+	return;
+}
+user_id = (String) session.getAttribute("user_id");
+if (user_id == null) {
+	//request.setAttribute("msg", "4");
+	response.sendRedirect("login.jsp?msg=4");
+	return;
+}
+ %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,12 +27,14 @@
   <h2>마이페이지</h2>
 
   <nav class="mypage-nav">
+ 	<button onclick="showSection('reservation')">예약 내역 확인</button>
     <button onclick="showSection('profile')">회원정보 수정</button>
-    <button onclick="showSection('withdraw')">회원 탈퇴</button>
     <button onclick="logout()">로그아웃</button>
+    <button onclick="showSection('withdraw')">회원 탈퇴</button>
+   
   </nav>
 
-  <section id="reservation" class="mypage-section">
+  <section id="reservation" class="mypage-section" style="display:none;">
     <h3>예약 내역 확인</h3>
     <table class="reservation-table">
       <thead>
@@ -50,15 +67,18 @@
 
   <section id="profile" class="mypage-section" style="display:none;">
     <h3>회원정보 수정</h3>
-    <form>
-      <label for="username">이름</label>
-      <input type="text" id="username" name="username" value="홍길동" required>
+    <form action="modifymember.do" method="post">
+      <label for="user_id">아이디</label>
+      <input type="text" id="user_id" name="user_id" value="${mDto.member_id}" required readonly="readonly">
+      
+      <label for="user_pw">비밀번호</label>
+      <input type="password" id="user_pw" name="user_pw" value="${mDto.member_pw }">
+      
+      <label for="user_name">이름</label>
+      <input type="text" id="user_name" name="user_name" value="${mDto.member_name }" required>
 
-      <label for="email">이메일</label>
-      <input type="email" id="email" name="email" value="hong@example.com" required>
-
-      <label for="phone">전화번호</label>
-      <input type="tel" id="phone" name="phone" value="010-1234-5678">
+      <label for="user_email">이메일</label>
+      <input type="email" id="user_email" name="user_email" value="${mDto.member_email }" required>
 
       <button type="submit" class="cta-button">수정하기</button>
     </form>
@@ -67,11 +87,15 @@
   <section id="withdraw" class="mypage-section" style="display:none;">
     <h3>회원 탈퇴</h3>
     <p>정말로 회원 탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
-    <button class="cta-button" style="background-color:#dc3545;" onclick="confirmWithdrawal()">회원 탈퇴하기</button>
+    <form action="deletemember.do" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?');">
+    <button type="submit" class="cta-button" style="background-color:#dc3545;">
+      회원 탈퇴하기
+    </button>
+  </form>
   </section>
 </main>
 
-<script>
+ <script>
   function showSection(id) {
     document.querySelectorAll('.mypage-section').forEach(section => {
       section.style.display = section.id === id ? 'block' : 'none';
@@ -80,15 +104,17 @@
 
   function logout() {
     alert('로그아웃 되었습니다.');
-    // 실제 로그아웃 처리 로직 추가
+    window.location.href = 'logout.do';
   }
 
   function confirmWithdrawal() {
     if (confirm('정말로 탈퇴하시겠습니까?')) {
       alert('회원 탈퇴가 완료되었습니다.');
-      // 실제 탈퇴 처리 로직 추가
-    }
+      }
   }
+  window.onload = () => {
+	    showSection('reservation');
+	  };
 </script>
 
 

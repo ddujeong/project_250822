@@ -12,15 +12,19 @@
     <h2>새 글 작성</h2>
 
     <!-- 게시글 작성 폼 -->
-    <form action="write_action.jsp" method="post">
+    <form action="writeOk.do" method="post">
+    	<input type="hidden" name="category" value="${param.category}" />
+    	
       <label for="title">제목</label>
-      <input type="text" id="title" name="title" required>
+      <input type="text" id="btitle" name="btitle" required>
      
-	  <label for="title">작성자</label>
-      <input type="text" id="title" name="title" required>
+	  <label for="member_id">작성자</label>
+      <input type="text" id="member_id" name="member_id" value="${sessionScope.user_id }" required readonly="readonly">
 
+	<div class="form-group">
       <label for="content">내용</label>
-      <textarea id="content" name="content" rows="10" required></textarea>
+      <textarea id="content" name="bcontent" rows="10" required></textarea>
+      </div>
 
       <button type="submit" class="cta-button">작성 완료</button>
     </form>

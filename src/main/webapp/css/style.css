@@ -8,8 +8,9 @@ body {
 }
 
 .container {
-  max-width: 900px;
-  margin: 40px auto;
+ width: 100%;
+  max-width: 900px; /* 필요시 너비 제한 */
+  margin: 0 auto;    /* 가운데 정렬 */
   padding: 0 20px;
 }
 
@@ -206,11 +207,11 @@ form p a:hover {
 }
 
 /* 회원 탈퇴 버튼 색상 다르게 */
-.mypage-nav button:nth-child(3) {
+.mypage-nav button:nth-child(4) {
   background-color: #e74c3c; /* 선명한 레드 */
 }
 
-.mypage-nav button:nth-child(3):hover {
+.mypage-nav button:nth-child(4):hover {
   background-color: #c0392b; /* 진한 레드 */
 }
 
@@ -266,7 +267,7 @@ form p a:hover {
 
 .mypage-section input[type="text"],
 .mypage-section input[type="email"],
-.mypage-section input[type="tel"] {
+.mypage-section input[type="password"] {
   padding: 10px 15px;
   font-size: 1em;
   border: 2px solid #bdc3c7;
@@ -280,7 +281,7 @@ form p a:hover {
 
 .mypage-section input[type="text"]:focus,
 .mypage-section input[type="email"]:focus,
-.mypage-section input[type="tel"]:focus {
+.mypage-section input[type="password"]:focus {
   outline: none;
   border-color: #2980b9;
   box-shadow: 0 0 8px rgba(41, 128, 185, 0.5);
@@ -330,7 +331,7 @@ form p a:hover {
 }
 
 /* 예약 폼 */
-main.container form {
+main.container form.reserve-form {
   max-width: 400px;
   margin: 0 auto;
   display: flex;
@@ -442,55 +443,196 @@ input[type="radio"]:checked + label.seat {
 .notice-table tbody tr a:hover {
   text-decoration: underline;
 }
-
-/* 검색바 컨테이너 */
-.search-bar {
+.top-actions {
   display: flex;
-  justify-content: flex-start; /* 왼쪽 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;  /* 아이템 간 간격 */
   margin-bottom: 20px;
-  width: 100%;
-  gap: 10px; /* 입력창과 버튼 사이의 간격 */
+  white-space: nowrap;
+  flex-wrap: wrap; /* 줄바꿈 허용 */
+  
 }
 
-/* 검색바 컨테이너 */
-.search-bar {
+.top-actions > * {
+  display: inline-flex; /* form, a 모두 inline-flex로 만들어서 블록 기본 스타일 해제 */
+  align-items: center; /* 내부 아이템도 중앙 정렬 */
+}
+/* 검색 폼 전체 컨테이너 */
+form.search-bar {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  margin-bottom: 20px;
-  width: 100%;
+  align-items: center;
+  gap: 0;
+  flex-direction: row;
+  max-width: none; /* 필요시 조절 */
+  background-color: #f4f4f4;
 }
 
-/* 검색창 스타일 */
-.search-bar input {
+/* select, input, button box-sizing 통일 및 높이 맞춤 */
+.search-select,
+.search-bar input[type="text"],
+.search-btn {
+  height: 38px;               /* 높이 통일 */
+  box-sizing: border-box;     /* 패딩, 보더 포함 크기 계산 */
+  font-size: 1em;             /* 폰트 크기 통일 */
+  line-height: 1.2;
   padding: 8px 12px;
   border: 2px solid #ccc;
-  border-radius: 4px 0 0 4px; /* 왼쪽 모서리 둥글게 */
-  font-size: 1em;
-  width: 200px;  /* 너비 고정 */
+  background-color: #fff;
+  color: #2c3e50;
   transition: border-color 0.3s ease;
 }
 
-.search-bar input:focus {
+/* select 스타일 */
+.search-select {
+  border-radius: 4px 0 0 4px;
+  border-right: none;
+}
+
+.search-select:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #2980b9;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+}
+
+/* input 텍스트 필드 스타일 */
+.search-bar input[type="text"] {
+  border-left: none;
+  border-right: none;
+  width: 200px; /* 원하는 너비로 조절 */
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #2980b9;
+  outline: none;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
 }
 
 /* 검색 버튼 스타일 */
-.search-bar button {
+.search-btn {
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #2980b9;
+}
+
+/* 새 글 작성 버튼 */
+.cta-button {
+  padding: 8px 15px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.cta-button:hover {
+  background-color: #1e7e34;
+}
+
+
+/* 🔹 검색 + 글쓰기 버튼 전체 감싸는 컨테이너 */
+.top-actions {
+ width: fit-content; /* 내용에 딱 맞게 크기 조절 */
+  max-width: 100%;    /* 화면 너비보다 크지 않게 */
+  margin-left: auto;  /* 오른쪽 정렬 위해 좌측 여백 자동 조절 */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+  white-space: nowrap;
+}
+
+/* 🔹 검색창 스타일 재정비 */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  width: auto;
+}
+
+/* 🔹 select 스타일 */
+.search-select {
+  padding: 8px 12px;
+  border: 2px solid #ccc;
+  border-radius: 4px 0 0 4px; /* 왼쪽 둥글게 */
+  font-size: 1em;
+  background-color: #fff;
+  color: #2c3e50;
+  transition: border-color 0.3s ease;
+}
+
+.search-select:focus {
+  outline: none;
+  border-color: #2980b9;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+}
+
+/* 🔹 input */
+.search-bar input[type="text"] {
+  padding: 8px 12px;
+  border: 2px solid #ccc;
+  border-left: none; /* select과 이어지게 */
+  font-size: 1em;
+  width: 200px;
+  transition: border-color 0.3s ease;
+  border-radius: 0;
+  color: #2c3e50;
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #2980b9;
+  outline: none;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+}
+
+/* 🔹 검색 버튼 */
+.search-btn {
   padding: 8px 16px;
   background-color: #3498db;
   color: white;
   border: none;
   border-radius: 0 4px 4px 0;  /* 오른쪽 모서리 둥글게 */
+  font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1em;
+  border-left: none; /* input과 이어지게 */
 }
 
-.search-bar button:hover {
+.search-btn:hover {
   background-color: #2980b9;
+}
+
+/* 🔹 새 글 작성 버튼 */
+.cta-button {
+  padding: 8px 15px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #1e7e34;
 }
 
 
@@ -595,20 +737,49 @@ input[type="radio"]:checked + label.seat {
 }
 
 /* 공지사항 검색 버튼에만 적용할 새로운 클래스 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  padding-left: 10px; /* 왼쪽 공간 확보 */
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+
+}
+
+.search-bar input[type="text"] {
+  padding: 8px 12px;
+  border: 2px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 1em;
+  color: #2c3e50;
+  border-right: none;
+  width: 200px;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #2980b9;
+  outline: none;
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+}
+
 .search-btn {
   padding: 8px 16px;
   background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0; /* 오른쪽 모서리 둥글게 */
+  border-radius: 0 4px 4px 0;
+  font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1em;
+  border-left: none;
 }
 
 .search-btn:hover {
   background-color: #2980b9;
 }
+
 /* 게시판 기본 스타일 */
 table.notice-table {
   width: 100%;
@@ -764,6 +935,57 @@ table.notice-table {
   color: #34495e;
   margin-bottom: 30px;
 }
+/* 게시글 수정 폼 */
+.board-edit {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.board-edit h2 {
+  font-size: 2em;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+/* 입력 필드 공통 스타일 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #34495e;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  background-color: #fafafa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+textarea {
+  resize: vertical;
+}
+
 /* 수정, 삭제 버튼 스타일 */
 .action-buttons {
   margin-top: 20px;
@@ -886,6 +1108,41 @@ table.notice-table {
   .board-detail .content {
     font-size: 1em;
   }
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0 20px;
+}
+
+.pagination {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.pagination li a {
+  display: block;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: #6366f1;
+  border: 1px solid #6366f1;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.pagination li a:hover {
+  background-color: #6366f1;
+  color: #ffffff;
+}
+
+.pagination li.active a {
+  background-color: #6366f1;
+  color: #ffffff;
+  font-weight: 600;
+  pointer-events: none;
+  border-color: #6366f1;
 }
 
 
