@@ -1,36 +1,28 @@
 package com.ddu.dto;
 
 public class CommentDto {
-	private int rnum;
+	private int cnum;
 	private int bnum;
 	private String member_id;
 	private String comment;
-	private String rdate;
+	private String cdate;
 	public CommentDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CommentDto(int rnum, int bnum, String member_id, String comment, String rdate) {
+	public CommentDto(int cnum, int bnum, String member_id, String comment, String cdate) {
 		super();
-		this.rnum = rnum;
+		this.cnum = cnum;
 		this.bnum = bnum;
 		this.member_id = member_id;
 		this.comment = comment;
-		this.rdate = rdate;
+		this.cdate = cdate;
 	}
-	
-	public CommentDto(int bnum, String member_id, String comment, String rdate) {
-		super();
-		this.bnum = bnum;
-		this.member_id = member_id;
-		this.comment = comment;
-		this.rdate = rdate;
+	public int getCnum() {
+		return cnum;
 	}
-	public int getRnum() {
-		return rnum;
-	}
-	public void setRnum(int rnum) {
-		this.rnum = rnum;
+	public void setCnum(int cnum) {
+		this.cnum = cnum;
 	}
 	public int getBnum() {
 		return bnum;
@@ -50,11 +42,11 @@ public class CommentDto {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public String getRdate() {
-		return rdate;
+	public String getCdate() {
+		return cdate;
 	}
-	public void setRdate(String rdate) {
-		this.rdate = rdate;
+	public void setCdate(String cdate) {
+		this.cdate = cdate;
 	}
 	
 	

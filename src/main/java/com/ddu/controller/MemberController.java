@@ -264,7 +264,8 @@ public class MemberController extends HttpServlet {
 					request.setAttribute("bDto", bDto);
 					request.setAttribute("cDtos", cDtos);
 				}
-				
+			String rnumStr = request.getParameter("rnum");
+			System.out.println("rnumStr = [" + rnumStr + "]");
 				System.out.println(bnum);
 			
 			viewPage = "contentview.jsp";
@@ -406,7 +407,6 @@ public class MemberController extends HttpServlet {
 		
 		} else if (comm.equals("/commentOk.do")) {
 			int bnum =Integer.parseInt(request.getParameter("bnum"));
-			int rnum =Integer.parseInt(request.getParameter("rnum"));
 			String comment =request.getParameter("comment");
 			
 			session= request.getSession();
@@ -423,14 +423,29 @@ public class MemberController extends HttpServlet {
 			
 			response.sendRedirect("contentview.do?bnum="+bnum);
 			return;
-		} else if (comm.equals("/commentmodifyOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
+		} else if (comm.equals("/commentmodify.do")) {
+			viewPage
+		}
+		else if (comm.equals("/commentmodify.do")) { // 글 수정 후 글내용 보기로 이동 요청
 			request.setCharacterEncoding("utf-8");
 			
-			int rnum = Integer.parseInt(request.getParameter("rnum"));
+			int cnum = Integer.parseInt(request.getParameter("cnum"));
 			int bnum = Integer.parseInt(request.getParameter("bnum"));
 			String comment = request.getParameter("comment");
 			
-			cDao.commentModify(comment, rnum);
+			cDao.commentModify(comment, cnum);
+			
+			response.sendRedirect("contentview.do?bnum=" + bnum);
+			return;
+		} 
+		else if (comm.equals("/commentmodifyOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
+			
+			int cnum = Integer.parseInt(request.getParameter("cnum"));
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			String comment = request.getParameter("comment");
+			
+			cDao.commentModify(comment, cnum);
 			
 			response.sendRedirect("contentview.do?bnum=" + bnum);
 			return;

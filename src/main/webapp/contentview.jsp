@@ -46,22 +46,22 @@
       <c:forEach var="cDto" items="${cDtos }">
       <div class="comment">
         <div class="author">${cDto.member_id }</div>
-        <div class="date">${cDto.rdate }</div>
+        <div class="date">${cDto.cdate }</div>
         <div class="text">${cDto.comment }</div>
         <div class="comment-actions">
-         <form action="commentmodify.jsp" method="GET" class="inline-form">
-    		 <input type="hidden" name="rnum" value="${cDto.rnum}" />
+         <form action="commentmodify.do" method="GET" class="inline-form">
+    		 <input type="hidden" name="cnum" value="${cDto.cnum}" />
      		 <button type="submit">수정</button>
  		 </form>
  		 <form action="commentDelete.do" method="POST" class="inline-form" onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
-     		 <input type="hidden" name="rnum" value="${cDto.rnum}" />
+     		 <input type="hidden" name="cnum" value="${cDto.cnum}" />
     		 <button type="submit">삭제</button>
    		 </form>
     </div>
       </div>
       </c:forEach>
       <!-- 댓글 작성 폼 -->
-      <form class="comment-form" action="commentOk.do?bnum=${bDto.bnum}&rnum=${cDto.rnum}" method="POST">
+      <form class="comment-form" action="commentOk.do?bnum=${bDto.bnum}" method="POST">
      	 <input type="hidden" name="bnum" value="${bDto.bnum}" />
      	 <c:choose>
      	 <c:when test="${not empty user_id|| sessionScope.user_id != null }">

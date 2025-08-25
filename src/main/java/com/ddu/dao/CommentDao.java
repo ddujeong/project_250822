@@ -51,7 +51,7 @@ public class CommentDao {
 		}
 	}
 	public List<CommentDto> commentList(int bnum) {
-		String sql ="SELECT c.rnum,c.member_id, c.comment, c.cdate "
+		String sql ="SELECT c.cnum,c.member_id, c.comment, c.cdate "
 				+ "From comment AS c inner join board AS b ON b.bnum = c.bnum "
 				+ "WHERE b.bnum=?";
 		List<CommentDto> cDtos = new ArrayList<CommentDto>();
@@ -64,12 +64,12 @@ public class CommentDao {
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
-				String rnum = rs.getString("rnum");
+				int cnum = rs.getInt("cnum");
 				String member_id = rs.getString("member_id");
 				String comment = rs.getString("comment");
 				String cdate = rs.getString("cdate");
 				
-				CommentDto cDto =new CommentDto(bnum, bnum, member_id, comment, cdate);
+				CommentDto cDto =new CommentDto(cnum, bnum, member_id, comment, cdate);
 				
 				cDtos.add(cDto);
 				
@@ -93,18 +93,18 @@ public class CommentDao {
 			}	
 		}return cDtos;
 	}
-	public void commentModify(String comment, int rnum) {
+	public void commentModify(String comment, int cnum) {
 		String sql = "UPDATE comment AS c "
 				+ "INNER JOIN board AS b ON b.bnum = c.bnum "
 				+ "SET c.comment=? "
-				+ "WHERE c.rnum=? ";
+				+ "WHERE c.cnum=? ";
 		try {
 			Class.forName(driverName);
 			conn = DriverManager.getConnection(url, username, password);	
 			pstmt = conn.prepareStatement(sql); 
 			
 			pstmt.setString(1,comment);
-			pstmt.setInt(2,rnum);
+			pstmt.setInt(2,cnum);
 			
 			pstmt.executeUpdate();
 			

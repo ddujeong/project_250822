@@ -27,10 +27,10 @@
       <c:forEach var="cDto" items="${cDtos}">
  	 <div class="comment">
     <div class="author">${cDto.member_id}</div>
-    <div class="date">${cDto.rdate}</div>
+    <div class="date">${cDto.cdate}</div>
 
     <c:choose>
-      <c:when test="${not empty rnum and cDto.rnum == rnum}">
+      <c:when test="${not empty cnum and cDto.cnum == cnum}">
         <form action="commentmodifyOk.do" method="POST">
           <input type="hidden" name="rnum" value="${cDto.rnum}" />
           <input type="hidden" name="bnum" value="${bDto.bnum}" />
@@ -45,12 +45,12 @@
         <div class="text">${cDto.comment}</div>
         <div class="comment-actions">
           <form action="commentmodify.do" method="GET" style="display:inline;">
-            <input type="hidden" name="rnum" value="${cDto.rnum}" />
+            <input type="hidden" name="cnum" value="${cDto.cnum}" />
             <input type="hidden" name="bnum" value="${bDto.bnum}" />
             <button type="submit">수정</button>
           </form>
           <form action="commentDelete.do" method="POST" style="display:inline;" onsubmit="return confirm('삭제하시겠습니까?');">
-            <input type="hidden" name="rnum" value="${cDto.rnum}" />
+            <input type="hidden" name="cnum" value="${cDto.cnum}" />
             <button type="submit">삭제</button>
           </form>
         </div>
