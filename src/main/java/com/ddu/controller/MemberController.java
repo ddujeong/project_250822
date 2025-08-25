@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import com.ddu.dao.ReservationDao;
 import com.ddu.dto.BoardDto;
 import com.ddu.dto.CommentDto;
 import com.ddu.dto.MemberDto;
+import com.ddu.dto.ReservationDto;
 
 @WebServlet("*.do")
 public class MemberController extends HttpServlet {
@@ -54,6 +57,7 @@ public class MemberController extends HttpServlet {
 		CommentDao cDao = new CommentDao();
 		List<BoardDto> bDtos = new ArrayList<BoardDto>();
 		List<CommentDto>cDtos = new ArrayList<CommentDto>();
+		List<ReservationDto>rDtos = new ArrayList<ReservationDto>();
 		
 		if(comm.equals("/signup.do")) {
 			viewPage="signup.jsp";
@@ -112,6 +116,7 @@ public class MemberController extends HttpServlet {
 			request.setCharacterEncoding("utf-8");
 			session = request.getSession();
 			String user_id = null;
+			
 			if (session == null ) {
 				response.sendRedirect("login.jsp?msg=4");
 				return;
@@ -122,9 +127,12 @@ public class MemberController extends HttpServlet {
 				return;
 			}
 			MemberDto mDto = mdao.memberInfo(user_id);
+			rDtos = rDao.reserveCheck(user_id);
+			
 			request.setAttribute("mDto", mDto);
+			request.setAttribute("rDtos", rDtos);
+			System.out.println(rDtos.size());
 			viewPage = "mypage.jsp";
-			System.out.println(user_id);
 		} else if (comm.equals("/modifymember.do")) { // 글 수정 후 글내용 보기로 이동 요청
 			request.setCharacterEncoding("utf-8");
 			
@@ -433,8 +441,6 @@ public class MemberController extends HttpServlet {
 			BoardDto bDto = bDao.contentView(bnum);
 			cDtos = cDao.commentList(bnum);
 			
-			cDao.commentModify(comment, cnum);
-			
 			request.setAttribute("cnum", cnum);
 			request.setAttribute("bDto", bDto);
 			request.setAttribute("cDtos", cDtos);
@@ -459,7 +465,59 @@ public class MemberController extends HttpServlet {
 			
 			response.sendRedirect("contentview.do?bnum="+bnum);
 			return;
-		}
+		}else if (comm.equals("/reservation.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
+			session= request.getSession();
+			session.getAttribute("user_id");
+			
+			if (session == null || session.getAttribute("user_id") == null) {
+		        response.sendRedirect("login.jsp?msg=4");
+		        return;
+		    }
+			
+			
+			viewPage="reservation.jsp";
+			
+		}else if (comm.equals("/reservationOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
+			Date rdate =Date.valueOf(request.getParameter("rdate"));
+			Time rtime =Time.valueOf(request.getParameter("rtime") + ":00");
+			String seat =request.getParameter("seat");
+			
+			session= request.getSession();
+			String member_id = (String)session.getAttribute("user_id");
+			
+			if (session == null || session.getAttribute("user_id") == null) {
+		        response.sendRedirect("login.jsp?msg=4");
+		        return;
+		    }
+			java.time.LocalDate paramDate = rdate.toLocalDate();
+			java.time.LocalDate now = java.time.LocalDate.now();
+			
+			boolean isPast = paramDate.isBefore(now);
+			request.setAttribute("isPast", isPast);
+			
+			if (isPast) {
+				response.sendRedirect("reservation.do?msg=5");
+				return;
+			}
+			ReservationDto rDto = new ReservationDto();
+			rDto.setMember_id(member_id);
+			rDto.setRdate(rdate);
+			rDto.setRtime(rtime);
+			rDto.setSeat(seat);
+			
+			rDao.reserve(member_id, rdate, rtime, seat);
+			
+			request.setAttribute("rDto", rDto);
+			
+			viewPage="reservationOk.jsp";
+		} else if (comm.equals("/deleteReservation.do")) { // 글 삭제 확인
+			int rnum = Integer.parseInt(request.getParameter("rnum"));
+			rDao.reservationDelete(rnum);
+			
+			viewPage="mypage.do";
+		} 
 		else {
 			viewPage = "index.jsp";
 		} 

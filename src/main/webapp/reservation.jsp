@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%
+ String msg = request.getParameter("msg");
+ if(msg != null){
+	 if("5".equals(msg)){
+ 		out.println("<script>alert('지난 날짜는 예약 할 수 없습니다')</script>");
+	 }
+ }
+%>    
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,12 +22,13 @@
     <h2>🎮 좌석 예약</h2>
 
     <!-- 날짜 및 시간 선택 -->
-    <form id="reservation-form" action="reservationOk.jsp" method="GET" class="reserve-form">
-  <label for="date">날짜 선택</label>
-  <input type="date" id="date" name="date" required />
+    <form id="reservation-form" action="reservationOk.do" method="GET" class="reserve-form">
+ 	
+  <label for="rdate">날짜 선택</label>
+  <input type="date" id="rdate" name="rdate" required />
 
-  <label for="time">시간 선택</label>
-  <input type="time" id="time" name="time" required />
+  <label for="rtime">시간 선택</label>
+  <input type="time" id="rtime" name="rtime" required />
 
   <!-- 좌석 선택 (라디오 버튼으로 처리) -->
   <h3>좌석 선택</h3>
@@ -52,9 +61,6 @@
     <label for="B4" class="seat">B4</label>
   </div>
 </div>
-
-  
-
   <button type="submit" class="cta-button">예약하기</button>
 </form>
 </main>

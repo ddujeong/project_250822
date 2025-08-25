@@ -13,7 +13,7 @@
     <div class="hero-content">
       <h1>🎮 EZPC - 전국 PC방 좌석 예약 서비스</h1>
       <p>복잡한 현장 대기 없이 원하는 시간, 원하는 좌석 예약 완료!</p>
-      <a href="reservation.jsp"><button class="cta-button">지금 좌석 예약하기</button></a>
+      <a href="reservation.do"><button class="cta-button">지금 좌석 예약하기</button></a>
     </div>
   </section>
 

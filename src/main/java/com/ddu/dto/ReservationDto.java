@@ -8,6 +8,7 @@ public class ReservationDto {
 	private String member_id;
 	private Date rdate;
 	private Time rtime;
+	private String seat;
 	private String createtime;
 	public ReservationDto() {
 		super();
@@ -19,6 +20,16 @@ public class ReservationDto {
 		this.member_id = member_id;
 		this.rdate = rdate;
 		this.rtime = rtime;
+		this.createtime = createtime;
+	}
+	
+	public ReservationDto(int rnum, String member_id, Date rdate, Time rtime, String seat, String createtime) {
+		super();
+		this.rnum = rnum;
+		this.member_id = member_id;
+		this.rdate = rdate;
+		this.rtime = rtime;
+		this.seat = seat;
 		this.createtime = createtime;
 	}
 	public int getRnum() {
@@ -50,6 +61,12 @@ public class ReservationDto {
 	}
 	public void setCreatetime(String createtime) {
 		this.createtime = createtime;
+	}
+	public String getSeat() {
+		return seat;
+	}
+	public void setSeat(String seat) {
+		this.seat = seat;
 	}
 
 }

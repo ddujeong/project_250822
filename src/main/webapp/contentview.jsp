@@ -49,6 +49,7 @@
         <div class="date">${cDto.cdate }</div>
         <div class="text">${cDto.comment }</div>
         <div class="comment-actions">
+        <c:if test="${sessionScope.user_id == cDto.member_id || sessionScope.user_id == 'admin'}">
          <form action="commentmodify.do" method="GET" class="inline-form">
     		 <input type="hidden" name="cnum" value="${cDto.cnum}" />
     		 <input type="hidden" name="bnum" value="${bDto.bnum}" />
@@ -59,6 +60,7 @@
      		 <input type="hidden" name="bnum" value="${bDto.bnum}" />
     		 <button type="submit">삭제</button>
    		 </form>
+   		 </c:if>
     </div>
       </div>
       </c:forEach>

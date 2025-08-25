@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="jakarta.tags.core" %>
     
 <%
 session = request.getSession();
@@ -36,33 +37,46 @@ if (user_id == null) {
 
   <section id="reservation" class="mypage-section" style="display:none;">
     <h3>예약 내역 확인</h3>
+    
     <table class="reservation-table">
       <thead>
         <tr>
+          <th></th>
           <th>예약번호</th>
           <th>날짜</th>
           <th>시간</th>
           <th>좌석</th>
-          <th>상태</th>
+          <th>예약시간</th>
         </tr>
       </thead>
       <tbody>
+      <c:if test="${not empty rDtos}">
+      <c:forEach var="rDto" items="${rDtos }">
         <tr>
-          <td>20250822001</td>
-          <td>2025-08-22</td>
-          <td>14:00</td>
-          <td>A1</td>
-          <td>확정</td>
+          <td>
+ 		 <label class="pretty-radio">
+   			 <input type="radio" name="reservationSelect"  value="${rDto.rnum}" />
+   		 	<span class="radio-circle"></span>
+ 		 </label>
+		  </td>
+          <td>${rDto.rnum }</td>
+          <td>${rDto.rdate }</td>
+          <td>${rDto.rtime }</td>
+          <td>${rDto.seat }</td>
+          <td>${rDto.createtime }</td>
         </tr>
-        <tr>
-          <td>20250822002</td>
-          <td>2025-08-23</td>
-          <td>18:00</td>
-          <td>B2</td>
-          <td>취소</td>
-        </tr>
+       </c:forEach>
+       </c:if>
+       <c:if test="${empty rDtos}">
+  <tr><td colspan="5">예약 내역이 없습니다.</td></tr>
+</c:if>
       </tbody>
     </table>
+    <div style="text-align: right; margin-top: 20px;">
+  <button onclick="cancelReservation()" class="cta-button" style="background-color: #e74c3c;">
+    예약 취소
+  </button>
+</div>
   </section>
 
   <section id="profile" class="mypage-section" style="display:none;">
@@ -115,6 +129,17 @@ if (user_id == null) {
   window.onload = () => {
 	    showSection('reservation');
 	  };
+  function cancelReservation() {
+ 	 const selected = document.querySelector('input[name="reservationSelect"]:checked');
+	  if (!selected) {
+	    alert("취소할 예약을 선택해주세요.");
+	    return;
+	  }
+
+	  const rnum = selected.value;
+	  // 쿼리스트링으로 이동
+	  window.location.href = "deleteReservation.do?rnum=" + encodeURIComponent(rnum);
+		}
 </script>
 
 

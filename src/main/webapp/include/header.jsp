@@ -6,7 +6,7 @@
   <div class="logo">🎮 EZPC</div>
   <nav>
     <a href="index.do">홈</a>
-    <a href="reservation.jsp">좌석 예약</a>
+    <a href="reservation.do">좌석 예약</a>
     <a href="notice.do?category=notice">공지사항</a>
     <a href="boardlist.do?category=general">게시판</a>
     <c:choose>
