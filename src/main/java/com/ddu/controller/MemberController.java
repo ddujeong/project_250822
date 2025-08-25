@@ -423,8 +423,6 @@ public class MemberController extends HttpServlet {
 			
 			response.sendRedirect("contentview.do?bnum="+bnum);
 			return;
-		} else if (comm.equals("/commentmodify.do")) {
-			viewPage
 		}
 		else if (comm.equals("/commentmodify.do")) { // 글 수정 후 글내용 보기로 이동 요청
 			request.setCharacterEncoding("utf-8");
@@ -432,11 +430,17 @@ public class MemberController extends HttpServlet {
 			int cnum = Integer.parseInt(request.getParameter("cnum"));
 			int bnum = Integer.parseInt(request.getParameter("bnum"));
 			String comment = request.getParameter("comment");
+			BoardDto bDto = bDao.contentView(bnum);
+			cDtos = cDao.commentList(bnum);
 			
 			cDao.commentModify(comment, cnum);
 			
-			response.sendRedirect("contentview.do?bnum=" + bnum);
-			return;
+			request.setAttribute("cnum", cnum);
+			request.setAttribute("bDto", bDto);
+			request.setAttribute("cDtos", cDtos);
+			
+			viewPage ="commentmodify.jsp";
+			
 		} 
 		else if (comm.equals("/commentmodifyOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
 			request.setCharacterEncoding("utf-8");
@@ -447,7 +451,13 @@ public class MemberController extends HttpServlet {
 			
 			cDao.commentModify(comment, cnum);
 			
-			response.sendRedirect("contentview.do?bnum=" + bnum);
+			viewPage="contentview.do";
+		}else if (comm.equals("/commentdelete.do")) { // 글 삭제 확인
+			int cnum = Integer.parseInt(request.getParameter("cnum"));
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			cDao.commentDelete(cnum);
+			
+			response.sendRedirect("contentview.do?bnum="+bnum);
 			return;
 		}
 		else {

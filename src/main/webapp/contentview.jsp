@@ -51,10 +51,12 @@
         <div class="comment-actions">
          <form action="commentmodify.do" method="GET" class="inline-form">
     		 <input type="hidden" name="cnum" value="${cDto.cnum}" />
+    		 <input type="hidden" name="bnum" value="${bDto.bnum}" />
      		 <button type="submit">수정</button>
  		 </form>
- 		 <form action="commentDelete.do" method="POST" class="inline-form" onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+ 		 <form action="commentdelete.do?cnum=${cDto.cnum}" method="POST" class="inline-form" onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
      		 <input type="hidden" name="cnum" value="${cDto.cnum}" />
+     		 <input type="hidden" name="bnum" value="${bDto.bnum}" />
     		 <button type="submit">삭제</button>
    		 </form>
     </div>

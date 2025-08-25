@@ -123,5 +123,31 @@ public class CommentDao {
 				e.printStackTrace();
 			}	
 		}
+}public void commentDelete(int cnum ) {
+	String sql = "DELETE FROM comment WHERE cnum=?";
+	try {
+		Class.forName(driverName);
+		conn = DriverManager.getConnection(url, username, password);	
+		pstmt = conn.prepareStatement(sql); 
+		
+		pstmt.setInt(1,cnum);
+		
+		pstmt.executeUpdate();
+		
+	} catch(Exception e) {	
+		System.out.println("글 삭제 실패");
+		e.printStackTrace();
+	} finally { 
+		try {
+			if(pstmt != null){
+			pstmt.close();
+			}
+			if(conn != null){ 	
+			conn.close();
+			} 
+		} catch(Exception e) {
+			e.printStackTrace();
+		}	
+	}
 }
 }

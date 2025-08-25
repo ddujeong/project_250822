@@ -31,25 +31,25 @@
 
     <c:choose>
       <c:when test="${not empty cnum and cDto.cnum == cnum}">
-        <form action="commentmodifyOk.do" method="POST">
-          <input type="hidden" name="rnum" value="${cDto.rnum}" />
+        <form action="commentmodifyOk.do" method="POST" class="inline-form">
+          <input type="hidden" name="cnum" value="${cDto.cnum}" />
           <input type="hidden" name="bnum" value="${bDto.bnum}" />
-          <textarea name="comment" rows="3" cols="50" required>${cDto.comment}</textarea>
+          <input type="text" name="comment" value="${cDto.comment}" required="required">
           <br>
           <button type="submit">수정 완료</button>
-          <a href="content.do?bnum=${bDto.bnum}"><button type="button">취소</button></a>
+          <button type="button" onclick="javascript:window.location.href='contentview.do?bnum=${bDto.bnum}'">취소</button>
+          
         </form>
       </c:when>
-
       <c:otherwise>
         <div class="text">${cDto.comment}</div>
         <div class="comment-actions">
-          <form action="commentmodify.do" method="GET" style="display:inline;">
+          <form action="commentmodify.do" method="GET" class="inline-form">
             <input type="hidden" name="cnum" value="${cDto.cnum}" />
             <input type="hidden" name="bnum" value="${bDto.bnum}" />
             <button type="submit">수정</button>
           </form>
-          <form action="commentDelete.do" method="POST" style="display:inline;" onsubmit="return confirm('삭제하시겠습니까?');">
+          <form action="commentDelete.do" method="POST"  class="inline-form" style="display:inline;" onsubmit="return confirm('삭제하시겠습니까?');">
             <input type="hidden" name="cnum" value="${cDto.cnum}" />
             <button type="submit">삭제</button>
           </form>
