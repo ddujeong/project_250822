@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +62,7 @@ public class MemberController extends HttpServlet {
 		
 		if(comm.equals("/signup.do")) {
 			viewPage="signup.jsp";
-		}
-		if(comm.equals("/signupOk.do")) {
+		} else if(comm.equals("/signupOk.do")) {
 			String mid =request.getParameter("member_id");
 			String mpw =request.getParameter("member_pw");
 			String mname =request.getParameter("member_name");
@@ -492,15 +492,23 @@ public class MemberController extends HttpServlet {
 		        return;
 		    }
 			java.time.LocalDate paramDate = rdate.toLocalDate();
-			java.time.LocalDate now = java.time.LocalDate.now();
+			java.time.LocalTime paramTime = rtime.toLocalTime();
+			java.time.LocalDate nowDate = java.time.LocalDate.now();
+			java.time.LocalTime nowTime = java.time.LocalTime.now();
+			System.out.println("예약날짜" + paramDate);
+			System.out.println("현재 날짜" + nowDate);
 			
-			boolean isPast = paramDate.isBefore(now);
-			request.setAttribute("isPast", isPast);
+			boolean isPastDate = paramDate.isBefore(nowDate);
+			boolean isPasttime = paramTime.isBefore(nowTime);
+			request.setAttribute("isPastDate", isPastDate);
+			request.setAttribute("isPastTime", isPasttime);
 			
-			if (isPast) {
-				response.sendRedirect("reservation.do?msg=5");
-				return;
-			}
+			
+			  if (isPastDate && isPasttime ) {
+				 response.sendRedirect("reservation.do?msg=5"); return; 
+			  
+			  }
+			 
 			ReservationDto rDto = new ReservationDto();
 			rDto.setMember_id(member_id);
 			rDto.setRdate(rdate);
