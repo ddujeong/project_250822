@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,24 +43,36 @@
       <h3>댓글</h3>
       
       <!-- 댓글 1 -->
+      <c:forEach var="cDto" items="${cDtos }">
       <div class="comment">
-        <div class="author">사용자1</div>
-        <div class="date">2025-08-22</div>
-        <div class="text">이번 이벤트 정말 기대돼요!</div>
+        <div class="author">${cDto.member_id }</div>
+        <div class="date">${cDto.rdate }</div>
+        <div class="text">${cDto.comment }</div>
+        <div class="comment-actions">
+         <form action="commentmodify.jsp" method="GET" class="inline-form">
+    		 <input type="hidden" name="rnum" value="${cDto.rnum}" />
+     		 <button type="submit">수정</button>
+ 		 </form>
+ 		 <form action="commentDelete.do" method="POST" class="inline-form" onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+     		 <input type="hidden" name="rnum" value="${cDto.rnum}" />
+    		 <button type="submit">삭제</button>
+   		 </form>
+    </div>
       </div>
-
-      <!-- 댓글 2 -->
-      <div class="comment">
-        <div class="author">사용자2</div>
-        <div class="date">2025-08-22</div>
-        <div class="text">참여할 수 있어서 기뻐요, 감사합니다!</div>
-      </div>
-
+      </c:forEach>
       <!-- 댓글 작성 폼 -->
-      <div class="comment-form">
-        <textarea placeholder="댓글을 작성해주세요..."></textarea>
-        <button class="cta-button">댓글 작성</button>
-      </div>
+      <form class="comment-form" action="commentOk.do?bnum=${bDto.bnum}&rnum=${cDto.rnum}" method="POST">
+     	 <input type="hidden" name="bnum" value="${bDto.bnum}" />
+     	 <c:choose>
+     	 <c:when test="${not empty user_id|| sessionScope.user_id != null }">
+        <textarea name="comment" placeholder="댓글을 작성해주세요..." required="required"></textarea>
+        <button type="submit" class="cta-button">댓글 작성</button>
+        </c:when>
+        <c:otherwise>
+         <textarea name="comment" placeholder="로그인 후 댓글 작성 가능합니다" required="required" readonly="readonly"></textarea>
+        </c:otherwise>
+        </c:choose>
+        </form>
     </div>
   </main>
 

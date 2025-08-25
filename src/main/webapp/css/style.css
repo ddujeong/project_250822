@@ -1056,6 +1056,74 @@ textarea {
   font-size: 1em;
   color: #34495e;
 }
+.comments-section {
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.comment {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.comment-info {
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #333;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+.comment-actions form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.comment-actions button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+form.inline-form {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block; /* 인라인으로 */
+}
+
+.comment-actions {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.comment-actions button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #444;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.comment-actions button:hover {
+  background-color: #ddd;
+}
 
 /* 댓글 작성 폼 */
 .comment-form {

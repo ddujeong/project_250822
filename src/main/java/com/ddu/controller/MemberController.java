@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ddu.dao.BoardDao;
+import com.ddu.dao.CommentDao;
 import com.ddu.dao.MemberDao;
 import com.ddu.dao.ReservationDao;
 import com.ddu.dto.BoardDto;
+import com.ddu.dto.CommentDto;
 import com.ddu.dto.MemberDto;
 
 @WebServlet("*.do")
@@ -49,7 +51,9 @@ public class MemberController extends HttpServlet {
 		MemberDao mdao = new MemberDao();
 		BoardDao bDao = new BoardDao();
 		ReservationDao rDao = new ReservationDao();
+		CommentDao cDao = new CommentDao();
 		List<BoardDto> bDtos = new ArrayList<BoardDto>();
+		List<CommentDto>cDtos = new ArrayList<CommentDto>();
 		
 		if(comm.equals("/signup.do")) {
 			viewPage="signup.jsp";
@@ -249,6 +253,7 @@ public class MemberController extends HttpServlet {
 			request.setCharacterEncoding("utf-8");
 			int bnum = Integer.parseInt(request.getParameter("bnum")); // 유저가 선택한 글의 번호
 			bDao.updateBhit(bnum); // 조회수 증가
+			cDtos = cDao.commentList(bnum);
 			
 			BoardDto bDto = bDao.contentView(bnum);	
 			if (bDto == null) { // 해당글이 존재 하지 않을때
@@ -257,6 +262,7 @@ public class MemberController extends HttpServlet {
 					// return;
 				} else {
 					request.setAttribute("bDto", bDto);
+					request.setAttribute("cDtos", cDtos);
 				}
 				
 				System.out.println(bnum);
@@ -348,9 +354,10 @@ public class MemberController extends HttpServlet {
 					totalBoardCount = bDtos.get(0).getBno();
 				}
 				bDtos = bDao.contentSearch(searchKeyword, searchType, page);
-				request.setAttribute("searchType", searchType);
-				request.setAttribute("searchKeyword", searchKeyword);
+				
 			} else { // 전체 글 리스트를 원하는 경우
+				searchKeyword ="";
+				searchType ="";
 				bDtos = bDao.boardList(1,category);
 				System.out.println("boardList 결과 개수: " + bDtos.size());
 				if (!bDtos.isEmpty()) {
@@ -372,12 +379,15 @@ public class MemberController extends HttpServlet {
 			request.setAttribute("endPage",endPage); // 그룹으로 나눈 페이지의 끝
 			request.setAttribute("totalBoardCount", totalBoardCount);
 			request.setAttribute("category", category);  // ← 이거 꼭 필요!
+			request.setAttribute("searchType", searchType);
+			request.setAttribute("searchKeyword", searchKeyword);
 
 			viewPage ="notice.jsp";
 		} else if (comm.equals("/noticeview.do")) { // 글 내용 확인 요청
 			request.setCharacterEncoding("utf-8");
 			int bnum = Integer.parseInt(request.getParameter("bnum")); // 유저가 선택한 글의 번호
 			bDao.updateBhit(bnum); // 조회수 증가
+			cDtos = cDao.commentList(bnum);
 			
 			BoardDto bDto = bDao.contentView(bnum);	
 			if (bDto == null) { // 해당글이 존재 하지 않을때
@@ -386,13 +396,45 @@ public class MemberController extends HttpServlet {
 					// return;
 				} else {
 					request.setAttribute("bDto", bDto);
+					request.setAttribute("cDtos", cDtos);
 				}
 				
 				System.out.println(bnum);
+				System.out.println(cDtos);
 			
-			viewPage = "contentview.jsp";
+			viewPage = "noticeview.jsp";
 		
-		} 
+		} else if (comm.equals("/commentOk.do")) {
+			int bnum =Integer.parseInt(request.getParameter("bnum"));
+			int rnum =Integer.parseInt(request.getParameter("rnum"));
+			String comment =request.getParameter("comment");
+			
+			session= request.getSession();
+			String member_id = (String)session.getAttribute("user_id");
+			
+			CommentDto cDto = new CommentDto();
+			
+			cDto.setBnum(bnum);
+			cDto.setMember_id(member_id);
+			cDto.setComment(comment);
+			
+			cDao.commentWrite(bnum, member_id, comment);
+			
+			
+			response.sendRedirect("contentview.do?bnum="+bnum);
+			return;
+		} else if (comm.equals("/commentmodifyOk.do")) { // 글 수정 후 글내용 보기로 이동 요청
+			request.setCharacterEncoding("utf-8");
+			
+			int rnum = Integer.parseInt(request.getParameter("rnum"));
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			String comment = request.getParameter("comment");
+			
+			cDao.commentModify(comment, rnum);
+			
+			response.sendRedirect("contentview.do?bnum=" + bnum);
+			return;
+		}
 		else {
 			viewPage = "index.jsp";
 		} 

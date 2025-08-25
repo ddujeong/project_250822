@@ -18,7 +18,7 @@
     <select name="searchType" class="search-select">
       <option value="btitle" ${searchType == 'b.btitle' ? 'selected' : '' }>제목</option>
       <option value="bcontent" ${searchType == 'b.bcontent' ? 'selected' : '' }>내용</option>
-      <option value="member_id"  ${searchType == 'm.member_id' ? 'selected': '' }>작성자</option>
+      <option value="member_name"  ${searchType == 'm.member_name' ? 'selected': '' }>작성자</option>
     </select>
     <input type="text" name="searchKeyword" value="${param.searchKeyword }" placeholder="검색어를 입력하세요" required />
     <button type="submit" class="search-btn">검색</button>
@@ -44,7 +44,7 @@
     <c:forEach var="bDto" items="${bDtos }">
       <tr>
         <td>${bDto.bno }</td>
-        <td><a href="noticeview.do?bnum=${bDto.bnum }">${bDto.btitle }</a></td>
+        <td><a href="noticeview.do?bnum=${bDto.bnum }&category=${category}">${bDto.btitle }</a></td>
         <td>${bDto.memberDto.member_name }</td>
         <td>${bDto.bdate }</td>
       </tr>
@@ -63,26 +63,26 @@
   <ul class="pagination">
     <!-- 1페이지로 이동 버튼 -->
     <c:if test="${currentPage > 1}">
-      <li><a href="notice.do?category=${category}&searchType=${searchType }&searchKeyword=${searchKeyword }&page=1">&laquo;</a></li>
+      <li><a href="notice.do?category=notice&searchType=${searchType }&searchKeyword=${searchKeyword }&page=1">&laquo;</a></li>
      <!-- 이전 그룹으로 이동 버튼 -->
     </c:if>
     <c:if test="${startPage > 1 }">
-		<li><a href="notice.do?category=${category}&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${startPage -1 }">&lt;</a></li>
+		<li><a href="notice.do?category=notice&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${startPage -1 }">&lt;</a></li>
 	</c:if>
     <!-- 페이지 번호 목록 -->
     <c:forEach var="i" begin="${startPage}" end="${endPage}">
       <li class="${i == currentPage ? 'active' : ''}">
-        <a href="notice.do?category=${category}&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${i}">${i}</a>
+        <a href="notice.do?category=notice&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${i}">${i}</a>
       </li>
     </c:forEach>
 
     <!-- 다음 그룹으로 이동 버튼 -->
     <c:if test="${endPage < totalPage}">
-      <li><a href="notice.do?category=${category}&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${endPage + 1}">&gt;</a></li>
+      <li><a href="notice.do?category=notice&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${endPage + 1}">&gt;</a></li>
     </c:if>
     <!-- 마지막 페이지로 이동 버튼 -->
     <c:if test="${currentPage < totalPage}">
-      <li><a href="notice.do?category=${category}&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${totalPage}">&raquo;</a></li>
+      <li><a href="notice.do?category=notice&searchType=${searchType }&searchKeyword=${searchKeyword }&page=${totalPage}">&raquo;</a></li>
     </c:if>
   </ul>
 </div>
